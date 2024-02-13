@@ -6,19 +6,21 @@ CAPI-02
 """
 
 import os
-
+import sys
 import utils.start_changeset as sc
 import utils.stringify_details as sd
 
 
-def main(change_set=None):
-    if change_set is None:
+def main(change_set_file=None):
+    if change_set_file is None:
         fname = "changeset.json"
-        change_set_file = os.path.join(os.path.dirname(__file__), fname)
-        stringified_change_set = sd.stringify_changeset(change_set_file)
-
     else:
-        stringified_change_set = change_set
+        fname = change_set_file
+    
+    print("Executing change set for " + fname)
+        
+    change_set_file = os.path.join(os.path.dirname(__file__), fname)
+    stringified_change_set = sd.stringify_changeset(change_set_file)
 
     response = sc.usage_demo(
         stringified_change_set,
@@ -29,4 +31,8 @@ def main(change_set=None):
 
 
 if __name__ == "__main__":
-    main()
+    if sys.argv[1]:
+        change_set_fname = sys.argv[1]
+        main(change_set_file=change_set_fname)
+    else:
+        main()
